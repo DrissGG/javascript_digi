@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TP08 - Operation</title>
+    <style>
+        .error {
+            background-color: red;
+            color: white;
+            padding: 5px;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Calculatrice d'opérations</h1>
+    <div>
+        <label for="nombre1">Nombre 1:</label>
+        <input type="text" id="nombre1">
+    </div>
+    <div>
+        <label for="nombre2">Nombre 2:</label>
+        <input type="text" id="nombre2">
+    </div>
+    <div>
+        <label for="operateur">Opération:</label>
+        <select id="operateur">
+            <option value="+">Addition (+)</option>
+            <option value="-">Soustraction (-)</option>
+            <option value="*">Multiplication (*)</option>
+            <option value="/">Division (/)</option>
+        </select>
+    </div>
+    <button id="calculer">Calculer</button>
+    <div id="resultat" class="result"></div>
+
+    <script>
+        document.getElementById('calculer').addEventListener('click', function() {
+            let nombre1 = document.getElementById('nombre1').value;
+            let nombre2 = document.getElementById('nombre2').value;
+            let operateur = document.getElementById('operateur').value;
+            let resultatElement = document.getElementById('resultat');
+
+            resultatElement.classList.remove('error');
+            resultatElement.innerHTML = '';
+
+         
+            if (isNaN(nombre1) || isNaN(nombre2) || nombre1 === '' || nombre2 === '') {
+                resultatElement.classList.add('error');
+                resultatElement.innerHTML = 'Vous devez saisir un nombre';
+                return;
+            }
+
+            
+            nombre1 = parseFloat(nombre1);
+            nombre2 = parseFloat(nombre2);
+
+            
+            let resultat;
+            let message;
+
+          
+            switch (operateur) {
+                case '+':
+                    resultat = nombre1 + nombre2;
+                    message = `Le résultat de l'addition est : ${resultat}`;
+                    break;
+                case '-':
+                    resultat = nombre1 - nombre2;
+                    message = `Le résultat de la soustraction est : ${resultat}`;
+                    break;
+                case '*':
+                    resultat = nombre1 * nombre2;
+                    message = `Le résultat de la multiplication est : ${resultat}`;
+                    break;
+                case '/':
+                    if (nombre2 !== 0) {
+                        resultat = nombre1 / nombre2;
+                        message = `Le résultat de la division est : ${resultat}`;
+                    } else {
+                        resultatElement.classList.add('error');
+                        message = 'La division par zéro n\'est pas permise';
+                    }
+                    break;
+                default:
+                    message = 'Opérateur non valide';
+            }
+
+           
+            resultatElement.innerHTML = message;
+        });
+    </script>
+</body>
+</html>
