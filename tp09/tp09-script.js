@@ -14,7 +14,7 @@ function fetchData() {
 function displayData(countries) {
     const container = document.getElementById('data-container');
     let htmlContent = '';
-
+    // ajout capital et region inclue dans le commit précèdent
     countries.forEach(country => {
         htmlContent += `<div class="country">
             <img src="${country.flags.svg}" alt="Drapeau de ${country.name}">
