@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,15 +13,18 @@
             padding: 5px;
             margin-bottom: 10px;
         }
+
         .success {
             color: white;
             background-color: green;
             padding: 5px;
             margin-bottom: 10px;
         }
+
         .form-group {
             margin-bottom: 10px;
         }
+
         .confirmation {
             color: white;
             background-color: blue;
@@ -30,12 +34,23 @@
             font-size: 20px;
             display: none;
         }
+
+        .confetti {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1 class="mt-4 mb-3">Créer un Compte Utilisateur</h1>
-        <form id="userForm" action="https://digicode.cleverapps.io/utilisateurs/create" method="POST">
+        <form id="userForm" onsubmit="event.preventDefault(); validateForm();" action="https://digicode.cleverapps.io/utilisateurs"
+            method="POST">
             <input type="hidden" name="identite" value="VotreNomDeFamille">
 
             <div class="form-row">
@@ -64,8 +79,8 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="deptNaissance">Département de Naissance:</label>
-                    <select id="deptNaissance" name="deptNaissance" class="form-control" required>
+                    <label for="departementNaissance">Département de Naissance:</label>
+                    <select id="departementNaissance" name="departementNaissance" class="form-control" required>
                         <option value="">Sélectionner...</option>
                         <option value="75">Paris</option>
                         <option value="77">Seine-et-Marne</option>
@@ -103,7 +118,7 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <input type="button" value="Valider" onclick="validateForm()" class="btn btn-primary btn-block">
+                    <input type="submit" value="Valider" class="btn btn-primary btn-block">
                 </div>
                 <div class="form-group col-md-6">
                     <input type="reset" value="Effacer" class="btn btn-secondary btn-block">
@@ -115,6 +130,8 @@
         <div id="confirmationMessage" class="confirmation">
             Formulaire soumis avec succès !
         </div>
+        <img id="confettiGif" src="https://media.giphy.com/media/3o6gDUfmjGOPlZRave/giphy.gif" alt="Confetti"
+            class="confetti">
     </div>
 
     <script>
@@ -124,19 +141,21 @@
             const prenom = document.getElementById('prenom').value.trim();
             const dateNaissance = document.getElementById('dateNaissance').value.trim();
             const lieuNaissance = document.getElementById('lieuNaissance').value.trim();
-            const deptNaissance = document.getElementById('deptNaissance').value.trim();
+            const departementNaissance = document.getElementById('departementNaissance').value.trim();
             const numeroRue = document.getElementById('numeroRue').value.trim();
             const libelleRue = document.getElementById('libelleRue').value.trim();
             const codePostal = document.getElementById('codePostal').value.trim();
             const ville = document.getElementById('ville').value.trim();
             const message = document.getElementById('message');
             const confirmationMessage = document.getElementById('confirmationMessage');
+            const confettiGif = document.getElementById('confettiGif');
 
             message.innerHTML = '';
             confirmationMessage.style.display = 'none';
+            confettiGif.style.display = 'none';
             let isValid = true;
 
-            if (!nom || !prenom || !dateNaissance || !lieuNaissance || !deptNaissance || !numeroRue || !libelleRue || !codePostal || !ville) {
+            if (!nom || !prenom || !dateNaissance || !lieuNaissance || !departementNaissance || !numeroRue || !libelleRue || !codePostal || !ville) {
                 message.innerHTML += '<div class="error">Tous les champs sont obligatoires.</div>';
                 isValid = false;
             }
@@ -156,11 +175,40 @@
             }
 
             if (isValid) {
-                message.innerHTML += '<div class="success">Formulaire valide. Envoi en cours...</div>';
-                confirmationMessage.style.display = 'block';
-                form.submit();
+                const formData = new FormData(form);
+                const dataObject = {};
+                formData.forEach((value, key) => {
+                    dataObject[key] = value;
+                });
+
+                fetch('https://digicode.cleverapps.io/utilisateurs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataObject)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        message.innerHTML += '<div class="success">Formulaire valide. Envoi réussi !</div>';
+                        confirmationMessage.style.display = 'block';
+                        confettiGif.style.display = 'block';
+                    } else {
+                        message.innerHTML += `<div class="error">${data.message}</div>`;
+                    }
+                })
+                .catch(error => {
+                    message.innerHTML += `<div class="error">Erreur lors de l'envoi du formulaire: ${error.message}</div>`;
+                });
             }
         }
     </script>
 </body>
+
 </html>
