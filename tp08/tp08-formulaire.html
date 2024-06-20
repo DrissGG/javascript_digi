@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tp08-formulaire.html</title>
+    <style>
+        .error {
+            background-color: red;
+            color: white;
+            padding: 5px;
+            margin-top: 10px;
+        }
+       
+    </style>
+</head>
+<body>
+    <form id="inscription">
+        <div>
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" name="nom" placeholder="Votre nom">
+        </div>
+        
+        <div>
+            <label for="prenom">Prenom</label>
+            <input type="text" id="prenom" name="prenom" placeholder="Votre prenom">
+        </div>
+        <div>
+            <label for="dateNaissance">Date de naissance</label>
+            <input type="text" id="dateNaissance" name="dateNaissance" placeholder="Votre dateNaissance">
+        </div>        
+
+        <button type="button" id="valider">Valider</button>
+    </form>
+
+    <div id="messageErreur"></div>
+
+
+    <script>
+        document.getElementById('valider').addEventListener('click',function(){
+            let nom = document.getElementById('nom').value;
+            let prenom = document.getElementById('prenom').value;
+            let dateNaissance = document.getElementById('dateNaissance').value;
+            let messageErreur = document.getElementById('messageErreur');
+
+            messageErreur.classList.remove('error');
+            messageErreur.innerHTML = '';
+
+            if(nom === '' || prenom === '' || dateNaissance === ''){
+                messageErreur.classList.add('error')
+                messageErreur.innerHTML = "tous les champs doivent etre renseignés"
+                return;
+            }
+            messageErreur.innerHTML = "Formulaire bien validé !"
+            
+        })
+    </script>
+    
+</body>
+</html>
