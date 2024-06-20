@@ -13,20 +13,20 @@ function fetchData() {
 
 function displayData(countries) {
     const container = document.getElementById('data-container');
-    let htmlContent = '';
+    let htmlContent = '<ol>';
     // ajout capital et region inclue dans le commit précèdent
     countries.forEach(country => {
-        htmlContent += `<div class="country">
-            <img src="${country.flags.svg}" alt="Drapeau de ${country.name}">
-            <p><strong>Nom:</strong> ${country.name}</p>
-            <p><strong>Capitale:</strong> ${country.capital}</p>
-            <p><strong>Région:</strong> ${country.region}</p>
-
-            <p><strong>Drapeau:</strong> <img src="${country.flags.png}" alt="Drapeau de ${country.name}" width="32"></p>
-            <hr>
-        </div>`;
+        htmlContent += `<li class="country">
+        <img src="${country.flags.svg}" alt="Drapeau de ${country.name}">
+        <p><strong>Nom:</strong> ${country.name}</p>
+        <p><strong>Capitale:</strong> ${country.capital}</p>
+        <p><strong>Région:</strong> ${country.region}</p>
+        <p><strong>Drapeau:</strong> <img src="${country.flags.png}" alt="Drapeau de ${country.name}" width="32"></p>
+        <hr>
+    </li>`;
     });
 
-    container.innerHTML = htmlContent
+    htmlContent += '</ol>';
+    container.innerHTML = htmlContent;
 
 }
